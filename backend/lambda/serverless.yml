@@ -1,0 +1,38 @@
+service: ingestion-service
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ${file(../env/${self:provider.stage}.json):REGION}
+  versionFunctions: false
+  stage: ${opt:stage}
+  apiGateway: 
+    shouldStartNameWithService: false
+
+  environment:      
+    STAGE: ${self:provider.stage}
+    REGION: ${file(../env/${self:provider.stage}.json):REGION}
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "secretsmanager:*"
+        - "lambda:*"
+        - "s3:*"
+        - "sns:*"
+      Resource: "*"
+
+functions:
+  createIngestionJob:
+    handler: handlers/createIngestionJob.main
+    events:
+      - http:
+          path: /ingestion/
+          method: post
+  
+  processFile: 
+    handler: handlers/processFile.main
+
+# plugins:
+#   - serverless-add-api-key
+

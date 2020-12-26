@@ -1,0 +1,6 @@
+{
+    "Payload": {
+        "ingestionId": "45ed70c4-3778-4b38-832c-b28f7553d50e",
+        "s3Key": "userCsv/task_file.xlsx"
+    }
+}
