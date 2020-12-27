@@ -45,6 +45,13 @@ functions:
           path: /ingestion
           method: get
 
+  getPreSignedUrl: 
+     handler: handlers/getPreSignedUrl.main
+     events:
+      - http:
+          path: /uploadUrl
+          method: get
+
   processFile: 
     handler: handlers/processFile.main
 
