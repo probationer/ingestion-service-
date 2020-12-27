@@ -3,7 +3,7 @@ const ResponseHandler = require('../handlers/_responseHandler');
 const ManagerFatory = require('../managers/_managerFactory');
 const { getConnection } = require('../common/db');
 
-let isDbConnected;
+let dbConnection = null;
 
 class BaseHandler {
 
@@ -12,9 +12,11 @@ class BaseHandler {
 
     // create database connection
     async initDbConnection() {
-        if (!isDbConnected) {
-            this.connection = await getConnection();
-            isDbConnected = true;
+        if (!dbConnection) {
+            dbConnection = await getConnection();
+            this.connection = dbConnection;
+        } else {
+            this.connection = dbConnection;
         }
     }
 

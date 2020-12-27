@@ -28,9 +28,23 @@ functions:
     handler: handlers/createIngestionJob.main
     events:
       - http:
-          path: /ingestion/
+          path: /ingestion
           method: post
   
+  getIngestionJobDetailsById:
+    handler: handlers/getIngestionJobDetailsByID.main
+    events:
+      - http:
+          path: /ingestion/{id}
+          method: get
+  
+  getIngestionJobs:
+    handler: handlers/getIngestionJobs.main
+    events:
+      - http:
+          path: /ingestion
+          method: get
+
   processFile: 
     handler: handlers/processFile.main
 

@@ -26,7 +26,20 @@ class IngestionJob extends BaseManager {
             `UPDATE ingestion_jobs SET status = '${status}' WHERE ingestion_id = '${ingestionId}'`
         );
         console.log(response);
+    }
 
+    async getIngestionJobById(ingestionId) {
+        const response = await this.connection.query(
+            `SELECT * FROM ingestion_jobs WHERE ingestion_id = '${ingestionId}'`
+        );
+        return response ? JSON.parse(JSON.stringify(response))[0] : null;
+    }
+
+    async getIngestionJob() {
+        const response = await this.connection.query(
+            `SELECT * FROM ingestion_jobs limit 100`
+        );
+        return response ? JSON.parse(JSON.stringify(response)) : [];
     }
 }
 

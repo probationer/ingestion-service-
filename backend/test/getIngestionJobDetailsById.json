@@ -1,0 +1,14 @@
+{
+    "resource": "/ingestion/{id}",
+    "httpMethod": "GET",
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": {
+        "id": "0c70427d-45c2-4b5d-9298-2d06b755a82b"
+    },
+    "stageVariables": null,
+    "requestContext": {
+    },
+    "body": null,
+    "isBase64Encoded": false
+}

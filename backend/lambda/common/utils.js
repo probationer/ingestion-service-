@@ -4,7 +4,7 @@ const PromisePool = require('@supercharge/promise-pool')
 
 const { INGESTION_BUCKET } = require('../common/constant');
 const s3 = new AWS.S3();
-
+const secretsmanager = new AWS.SecretsManager()
 /**
  * Create a new promise pool instance which then allows chain
  * the .for(), .withConcurrency(), and .process() methods.
@@ -78,4 +78,17 @@ exports.getFileFromS3 = async (s3Key) => {
             }
         });
     })
+}
+
+/** Get secret from */
+exports.getSecret = async (secretName) => {
+    const params = {
+        SecretId: secretName
+    };
+    let secrets = await secretsmanager.getSecretValue(params).promise();
+    if (!secrets) {
+        throw Error('Unable to find messageapi connection details');
+    }
+    secrets = JSON.parse(secrets.SecretString);
+    return secrets;
 }
