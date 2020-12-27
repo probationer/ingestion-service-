@@ -12,6 +12,7 @@ provider:
   environment:      
     STAGE: ${self:provider.stage}
     REGION: ${file(../env/${self:provider.stage}.json):REGION}
+    AWS_ACCOUNT_ID: ${file(../env/${self:provider.stage}.json):AWS_ACCOUNT_ID}
 
   iamRoleStatements:
     - Effect: "Allow"

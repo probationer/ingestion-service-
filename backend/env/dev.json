@@ -1,3 +1,4 @@
 {
-    "REGION": "ap-southeast-1"
+    "REGION": "ap-southeast-1",
+    "AWS_ACCOUNT_ID" : "420887858633"
 }

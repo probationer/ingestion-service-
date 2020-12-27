@@ -15,9 +15,18 @@ class IngestionJob extends BaseManager {
             `INSERT INTO ingestion_jobs (ingestion_id, s3_key, owner_id, status) 
             VALUES ('${ingestionId}','${s3key}','${owner}','${JOB_STATUS.PENDING}')`
         );
-        if(response.insertId){
+        if (response.insertId) {
             return ingestionId
         }
+        throw Error('Not Able to ingest data');
+    }
+
+    async updateStatus(ingestionId, status) {
+        const response = await this.connection.query(
+            `UPDATE ingestion_jobs SET status = '${status}' WHERE ingestion_id = '${ingestionId}'`
+        );
+        console.log(response);
+
     }
 }
 

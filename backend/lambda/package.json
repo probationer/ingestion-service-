@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@supercharge/promise-pool": "^1.6.0",
     "aws-sdk": "^2.817.0",
     "convert-excel-to-json": "^1.7.0",
     "csvtojson": "^2.0.10",

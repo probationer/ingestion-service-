@@ -1,6 +1,6 @@
 {
     "body": {
-        "s3Key": "abc",
+        "s3Key": "userCsv/task_file.xlsx",
         "owner": "sandeep"
     }
 }
