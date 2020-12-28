@@ -1,0 +1,14 @@
+{
+    "resource": "/uids/{id}",
+    "httpMethod": "GET",
+    "queryStringParameters": null,
+    "multiValueQueryStringParameters": null,
+    "pathParameters": {
+        "id": "cecad6d7-1f75-4da5-a1f3-b7316e03bd9e"
+    },
+    "stageVariables": null,
+    "requestContext": {
+    },
+    "body": null,
+    "isBase64Encoded": false
+}

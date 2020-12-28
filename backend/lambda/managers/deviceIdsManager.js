@@ -1,6 +1,7 @@
 const BaseManager = require('./_baseManager');
 
 const { promisePool } = require('../common/utils');
+const { TABLE } = require('../common/constant');
 
 
 class DeviceIdsManager extends BaseManager {
@@ -14,7 +15,7 @@ class DeviceIdsManager extends BaseManager {
     createBatchQuery(jsondata, ingestionId, batchSize) {
         const insertQueries = [];
         let query = [];
-        const insertQuery = 'INSERT INTO device_ids (uid, device_type, ingestion_id) VALUES ';
+        const insertQuery = `INSERT INTO ${TABLE.DEVICE_IDS} (uid, device_type, ingestion_id) VALUES `;
         jsondata.forEach((json, counter) => {
             if ((counter + 1) % batchSize === 0) {
                 insertQueries.push(insertQuery + query.join(','));
@@ -43,6 +44,13 @@ class DeviceIdsManager extends BaseManager {
         if (!completedPromises.length) {
             throw Error('No Row inserted');
         }
+    }
+
+    async getDeviceIdsByIngestionId(ingestionId, limit) {
+        const response = await this.connection.query(
+            `SELECT uid, device_type as platform FROM ${TABLE.DEVICE_IDS} WHERE ingestion_id = '${ingestionId}' limit ${limit}`
+        );
+        return response ? JSON.parse(JSON.stringify(response)) : [];
     }
 
 }

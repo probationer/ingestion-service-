@@ -1,5 +1,6 @@
 const serverlessMySQL = require('serverless-mysql');
-const { getSecret } = require('../common/utils');
+
+const { DB_SECRETS } = require('../common/constant');
 // create seperate mutable connection objects
 // but don't connect to db yet
 // these objects will remain same across executions
@@ -26,12 +27,7 @@ async function getConnection() {
     // call library function to check if
     // connection is present for this lambda
     // const dbSecret = await getSecret(`db-${process.env.STAGE}`);
-    const dbSecret = {
-        host: "database-learning.cxnedxaqkryj.ap-south-1.rds.amazonaws.com",
-        database: "ingestion-service",
-        user: "admin",
-        password: "password"
-    }
+    const dbSecret = { ...DB_SECRETS };
     await initConnections(dbSecret);
     return {
         query: connections.query,

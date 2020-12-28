@@ -14,37 +14,36 @@ const columns = [
     {
         id: 's3Key',
         label: 'File Name',
-        minWidth: 170,
-        align: 'right',
+        minWidth: 200,
+        align: 'left',
         format: (value) => value.toLocaleString('en-US'),
+    },
+    {
+        id: 'date',
+        label: 'Date',
+        minWidth: 150,
+        align: 'left',
+        format: (value) => value.toFixed(2),
     },
     {
         id: 'status',
         label: 'Status',
-        minWidth: 170,
-        align: 'right',
+        minWidth: 100,
+        align: 'center',
         format: (value) => value.toLocaleString('en-US'),
     },
     {
         id: 'button',
         label: ' ',
-        minWidth: 170,
-        align: 'right',
+        minWidth: 100,
+        align: 'center',
         format: (value) => value.toFixed(2),
     },
 ];
 
-export default class JobTable extends React.Component {
+export default function JobTable (props){
 
-    constructor(props) {
-        super(props);
-        
-    }
-
-
-    render() {
-        const { rows } = this.props;
-        console.log('inrender', rows)
+        const { rows } = props;
         return (
             <Paper style={{ marginLeft: '10%', width: '80%' }}>
                 <TableContainer style={{ maxHeight: 500 }} >
@@ -55,7 +54,7 @@ export default class JobTable extends React.Component {
                                     <TableCell
                                         key={column.id}
                                         align={column.align}
-                                        style={{ minWidth: column.minWidth }}
+                                        style={{ minWidth: column.minWidth, fontWeight: "bold" }}
                                     >
                                         {column.label}
                                     </TableCell>
@@ -65,7 +64,7 @@ export default class JobTable extends React.Component {
                         <TableBody>
                             {rows.map((row) => {
                                 return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                    <TableRow hover tabIndex={-1} key={row.code}>
                                         {columns.map((column, index) => {
                                             const value = row[column.id];
                                             return (
@@ -82,5 +81,4 @@ export default class JobTable extends React.Component {
                 </TableContainer>
             </Paper>
         );
-    }
 }

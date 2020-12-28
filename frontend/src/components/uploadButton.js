@@ -1,20 +1,16 @@
 import React from 'react'
 
-class UploadButton extends React.Component {
+function UploadButton({ onFormSubmit, onChange }) {
 
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <form onSubmit={this.props.onFormSubmit}>
+    return (
+        <div>
+            <form onSubmit={onFormSubmit}>
                 <h1>Ingestion Service</h1>
-                <input type="file" onChange={this.props.onChange} />
+                <input type="file" onChange={onChange} />
                 <button type="submit">Upload</button>
             </form>
-        )
-    }
+        </div>
+    )
 }
 
 export default UploadButton;

@@ -51,6 +51,13 @@ functions:
       - http:
           path: /uploadUrl
           method: get
+    
+  getUidsByIngestionId: 
+     handler: handlers/getUidsByIngestionIds.main
+     events:
+      - http:
+          path: /uids/{id}
+          method: get
 
   processFile: 
     handler: handlers/processFile.main

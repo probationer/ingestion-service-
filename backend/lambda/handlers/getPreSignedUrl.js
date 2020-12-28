@@ -6,9 +6,7 @@ const { INGESTION_BUCKET } = require('../common/constant');
 
 
 const s3 = new AWS.S3({
-    region: 'ap-south-1',
-    accessKeyId: 'AKIAWD7W7BXEX4I5TCDB',
-    secretAccessKey: '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'
+    region: 'ap-south-1'
 });
 class GetPreSignedUrl extends BaseHandler {
 

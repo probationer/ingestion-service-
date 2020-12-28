@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.1.10",
     "aws-amplify": "^3.3.13",
     "axios": "^0.21.1",
+    "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -17,6 +18,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "deploy": "yarn build && aws s3 sync build/ s3://ingestion-service.in --acl public-read",
+    "sync-s3": "aws s3 sync build/ s3://ingestion-service.in --acl public-read",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

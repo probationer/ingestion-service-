@@ -14,4 +14,5 @@ module.exports = Object.freeze({
     GET_PRESIGNED_URL: 'uploadUrl',
     INGESTION_BY_ID: 'ingestion/{id}',
     INGESTION: 'ingestion',
+    DEVICES_BY_INGESTION_ID: 'uids/{id}'
 })
