@@ -27,11 +27,11 @@ class CreateIngestionJob extends BaseHandler {
      * @param {*} ingestionJobId 
      * NOTE: Async lambda will note wait for reponse 
      */
-    async ingestSheet(ingestionJobId, s3Key) {
-        const body = { ingestionJobId, s3Key }
+    async ingestSheet(ingestionId, s3Key) {
+        const body = { ingestionId, s3Key }
         const lambda = new AWS.Lambda();
         const params = {
-            FunctionName: `arn:aws:lambda:${process.env.REGION}:882954062846:function:ingestion-service-${process.env.STAGE}-processFile`,
+            FunctionName: `arn:aws:lambda:${process.env.REGION}:${process.env.AWS_ACCOUNT_ID}:function:ingestion-service-${process.env.STAGE}-processFile`,
             InvocationType: 'Event',
             Payload: JSON.stringify(body)
         };

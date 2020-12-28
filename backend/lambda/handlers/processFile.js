@@ -1,6 +1,6 @@
 const BaseHandler = require('./_baseHandler');
 const {
-    getJsonFromXlsx,
+    getJsonFromCsv,
     getFileFromS3,
     getParseBody
 } = require('../common/utils');
@@ -18,12 +18,16 @@ class ProcessFile extends BaseHandler {
     }
 
     /** Insert data in bulk */
-    async insertBulkData(jsonData, ingestionId) {
+    async insertBulkData(csvFile, ingestionId) {
         const deviceManager = this.dbManager.getManager(MANAGERS.DEVICE_IDS);
         let status = JOB_STATUS.COMPLETED;
         try {
-            await deviceManager.bulkInsert(jsonData, ingestionId);
+            const jsonData = await getJsonFromCsv(csvFile);
+            const filterData = this.validateJson(jsonData);
+            console.log(jsonData, filterData.length);
+            await deviceManager.bulkInsert(filterData, ingestionId);
         } catch (er) {
+            console.log('Error while bulk upload', er);
             status = JOB_STATUS.FAILED;
         }
         return status;
@@ -47,10 +51,7 @@ class ProcessFile extends BaseHandler {
     async process(event, context, callback) {
         const { ingestionId, s3Key } = getParseBody(event);
         const csvFile = await getFileFromS3(s3Key);
-        const jsonData = await getJsonFromXlsx(csvFile);
-        const filterData = this.validateJson(jsonData);
-        console.log(jsonData.length, filterData.length);
-        const ingestionStatus = await this.insertBulkData(filterData, ingestionId);
+        const ingestionStatus = await this.insertBulkData(csvFile, ingestionId);
         await this.updateIngestionJobStatus(ingestionId, ingestionStatus);
     }
 

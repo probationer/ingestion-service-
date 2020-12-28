@@ -40,6 +40,9 @@ class DeviceIdsManager extends BaseManager {
         );
         console.log('completedPromises : ==>', completedPromises.length * batchSize);
         console.log('   failedPromises : ==>', failedPromises.length * batchSize);
+        if (!completedPromises.length) {
+            throw Error('No Row inserted');
+        }
     }
 
 }

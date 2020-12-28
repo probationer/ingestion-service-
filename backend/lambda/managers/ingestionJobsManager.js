@@ -37,7 +37,7 @@ class IngestionJob extends BaseManager {
 
     async getIngestionJob() {
         const response = await this.connection.query(
-            `SELECT * FROM ingestion_jobs limit 100`
+            `SELECT * FROM ingestion_jobs Order by created_at DESC limit 100`
         );
         return response ? JSON.parse(JSON.stringify(response)) : [];
     }

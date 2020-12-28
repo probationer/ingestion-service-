@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
-const excelToJson = require('convert-excel-to-json');
 const PromisePool = require('@supercharge/promise-pool')
+const csv = require('csvtojson');
 
 const { INGESTION_BUCKET } = require('../common/constant');
 const s3 = new AWS.S3();
@@ -38,20 +38,15 @@ exports.getParseBody = (body) => {
     return body;
 }
 
+
 /** Convert  */
-exports.getJsonFromXlsx = async (data) => {
-    const res = excelToJson({
-        source: data,
-        header: { rows: 1 },
-        columnToKey: { '*': '{{columnHeader}}' }
-    });
-    const key = Object.keys(res);
-    if (res) {
-        return res[key[0]];
+exports.getJsonFromCsv = (stream) => {
+    try {
+        return csv().fromStream(stream);
+    } catch (er) {
+        throw Error('Parse Error');
     }
-    console.log("No result from xlsx");
-    return null;
-};
+}
 
 
 
@@ -67,17 +62,7 @@ exports.getFileFromS3 = async (s3Key) => {
         Bucket: INGESTION_BUCKET,
         Key: s3Key
     }
-    return new Promise((resolve, reject) => {
-        s3.getObject(params, (err, data) => {
-            if (err) {
-                console.error("Error While Downloading From Multiply Bucket", JSON.stringify(err));
-                reject(err);
-            } else {
-                console.log("Object Downloaded Succesfully.");
-                resolve(data.Body);
-            }
-        });
-    })
+    return s3.getObject(params).createReadStream();
 }
 
 /** Get secret from */

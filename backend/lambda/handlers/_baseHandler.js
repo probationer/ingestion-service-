@@ -28,7 +28,10 @@ class BaseHandler {
     // request will converge handler 
     async handler(event, context, callback) {
         console.log('INSIDE BASEHANDLER FUNCTION : ', JSON.stringify(event));
+
+        context.callbackWaitsForEmptyEventLoop = false;
         await this.initDbManager();
+
         try {
             return await this.process(event, context, callback);
         } catch (err) {
