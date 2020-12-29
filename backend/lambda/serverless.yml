@@ -61,6 +61,7 @@ functions:
 
   processFile: 
     handler: handlers/processFile.main
+    timeout: 300
 
 # plugins:
 #   - serverless-add-api-key

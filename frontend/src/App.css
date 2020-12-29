@@ -7,6 +7,27 @@
   pointer-events: none;
 }
 
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 80%;
+  margin-left: 10%;
+}
+
+.linerLoader{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 50px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

@@ -3,8 +3,10 @@ import React from 'react';
 import moment from 'moment';
 
 import UploadButtons from './components/UploadButton';
-import JobTable from './components/Table';
+import SortTable from './components/SortTable';
 import ViewUidModal from './components/ViewUidModal';
+import Loader from './components/Loader';
+import LinerLoader from './components/LinerLoader';
 
 import './App.css';
 
@@ -17,7 +19,10 @@ import {
   INGESTION,
   JOB_STATUS
 } from './constant';
-
+const LOADER_TYPE = {
+  UPLOAD_LOADER: 'uploadLoader',
+  TABLE_LOADER: 'tableLoader'
+}
 class App extends React.Component {
 
   constructor(props) {
@@ -27,7 +32,9 @@ class App extends React.Component {
       file: null,
       isModalOpen: false,
       body: {},
-      currentView: []
+      currentView: [],
+      uploadLoader: false,
+      tableLoader: true
     }
     this.onChange = this.onChange.bind(this)
   }
@@ -43,12 +50,14 @@ class App extends React.Component {
     e.preventDefault()
     if (this.state.file) {
       try {
+        this.handlerLoader(LOADER_TYPE.UPLOAD_LOADER, true);
         const { url, key } = await this.getS3PresignedUrl();
         await this.uploadFileInS3(url, this.state.file);
         const { ingestionJobId } = await this.insertJob(key);
         await this.getIngestionJobs();
         this.startPolling(1, ingestionJobId);
         this.setState({ file: null });
+        this.handlerLoader(LOADER_TYPE.UPLOAD_LOADER, false);
       } catch (er) {
         console.log("Error while completing process", er)
       }
@@ -73,6 +82,7 @@ class App extends React.Component {
 
   /** Step 4: Get ingestion jobs from api */
   async getIngestionJobs() {
+    this.handlerLoader(LOADER_TYPE.TABLE_LOADER, true);
     const rows = await getCall(BASE_URL + INGESTION, null, null)
     this.setState({
       rows: rows.map((row, index) => {
@@ -83,6 +93,7 @@ class App extends React.Component {
         );
       })
     })
+    this.handlerLoader(LOADER_TYPE.TABLE_LOADER, false);
   }
 
   /**Step 5: Start polling of new status */
@@ -104,15 +115,31 @@ class App extends React.Component {
     );
   }
 
+  /** change state of loader */
+  handlerLoader(type, isActive) {
+    switch (type) {
+      case LOADER_TYPE.UPLOAD_LOADER:
+        this.setState({ uploadLoader: isActive });
+        break;
+      case LOADER_TYPE.TABLE_LOADER:
+        this.setState({ tableLoader: isActive });
+        break;
+      default:
+        console.log('Wrong loader');
+    }
+  }
+
   /** Get information of job by its ingestion id aka code */
   async getIngestionJobDetailById(serial, code) {
 
     const PATH = `${INGESTION}/${code}`;
-    const response = getCall(BASE_URL + PATH, null, null);
+    this.handlerLoader(LOADER_TYPE.TABLE_LOADER, true);
+    const response = await getCall(BASE_URL + PATH, null, null);
     const rows = [...this.state.rows];
     const { ingestion_id, s3_key, status, created_at } = response;
     rows[serial - 1] = this.createData(serial, ingestion_id, s3_key, status, created_at);
     this.setState({ rows });
+    this.handlerLoader(LOADER_TYPE.TABLE_LOADER, false);
     return status;
 
   }
@@ -183,10 +210,20 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <UploadButtons onChange={this.onChange} onFormSubmit={this.performUploadProcess} />
+        <h1>Ingestion Service</h1>
+        <div className="header">
+          <UploadButtons onChange={this.onChange} onFormSubmit={this.performUploadProcess} />
+          <div></div>
+          {this.state.uploadLoader ? (<Loader size={20} />) : ''}
+        </div>
         <ViewUidModal body={this.state.isModalOpen ? this.state.currentView : []} open={this.state.isModalOpen} handleClose={this.toggleModal} />
-        <div style={{ height: 50 }}></div>
-        <JobTable rows={this.state.rows} />
+        <div style={{ height: 30, alignItems: "center" }}> </div>
+        <div className="table">
+          <div className="linerLoader">
+            {this.state.tableLoader ? (<LinerLoader />) : (<div style={{ height: 50 }}></div>)}
+          </div>
+          <SortTable rows={this.state.rows} />
+        </div>
       </div>
     );
   }
