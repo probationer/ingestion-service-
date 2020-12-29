@@ -192,12 +192,12 @@ export default function SortTable(props) {
                                             hover
                                             role="checkbox"
                                             tabIndex={-1}
-                                            key={row.name}
+                                            key={row.code}
                                         >
-                                            {headCells.map(header => {
+                                            {headCells.map((header,index) => {
                                                 const value = row[header.id]
                                                 return (
-                                                    <TableCell align={header.align}>{value}</TableCell>
+                                                    <TableCell key={index} align={header.align}>{value}</TableCell>
                                                 )
                                             })}
                                         </TableRow>

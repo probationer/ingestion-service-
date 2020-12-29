@@ -31,12 +31,12 @@ class App extends React.Component {
       rows: [],
       file: null,
       isModalOpen: false,
+      isModalErrOpen: false,
       body: {},
       currentView: [],
       uploadLoader: false,
       tableLoader: true
     }
-    this.onChange = this.onChange.bind(this)
   }
 
   /**
@@ -145,8 +145,14 @@ class App extends React.Component {
   }
 
   /** handler on change condition in upload button */
-  onChange(e) {
-    this.setState({ file: e.target.files[0] })
+  onChange = (e) => {
+    const fileDetails = e.target.files[0];
+    if (fileDetails.type === 'text/csv') {
+      this.setState({ file: e.target.files[0] });
+    } else {
+      console.log('Wrong type');
+      this.setState({ isModalErrOpen: true })
+    }
   }
 
   /** get button layout according to job status */
@@ -207,6 +213,11 @@ class App extends React.Component {
     this.setState({ isModalOpen })
   }
 
+  toggleErrModal = () => {
+    const isModalErrOpen = !this.state.isModalErrOpen;
+    this.setState({ isModalErrOpen })
+  }
+
   render() {
     return (
       <div className="App">
@@ -216,6 +227,7 @@ class App extends React.Component {
           <div></div>
           {this.state.uploadLoader ? (<Loader size={20} />) : ''}
         </div>
+        <ViewUidModal body={"Wrong file type"} open={this.state.isModalErrOpen} handleClose={this.toggleErrModal} isMsg={true} />
         <ViewUidModal body={this.state.isModalOpen ? this.state.currentView : []} open={this.state.isModalOpen} handleClose={this.toggleModal} />
         <div style={{ height: 30, alignItems: "center" }}> </div>
         <div className="table">

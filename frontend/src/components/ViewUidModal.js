@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const columns = [
-    { id: "uid", align: 'left'},
-    { id: "platform", align: 'left'}
+    { id: "uid", align: 'left' },
+    { id: "platform", align: 'left' }
 ]
 
 function CreateUidTable(rows) {
@@ -58,7 +58,13 @@ function CreateUidTable(rows) {
 
 }
 
-function ViewUidModal({ body, open, handleClose, }) {
+function showSimpleMessage(msg) {
+    return (
+        <div style={{ maxHeight: 500, textAlign: "center" }} > {msg} </div>
+    )
+}
+
+function ViewUidModal({ body, open, handleClose, isMsg = false }) {
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
     return (
@@ -67,8 +73,12 @@ function ViewUidModal({ body, open, handleClose, }) {
             onClose={handleClose}
         >
             <div style={modalStyle} className={classes.paper}>
-                {CreateUidTable(body)}
+                {
+                    isMsg ? showSimpleMessage(body) : CreateUidTable(body)
+                }
             </div>
+
+
         </Modal>
     )
 }
