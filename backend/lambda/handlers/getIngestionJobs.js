@@ -1,7 +1,7 @@
 const BaseHandler = require('./_baseHandler');
 const ResponseHandler = require('./_responseHandler');
 
-const { MANAGERS } = require('../common/constant');
+const { MANAGERS, UPLOAD_FOLDER } = require('../common/constant');
 
 class GetIngestionJobs extends BaseHandler {
 
@@ -9,9 +9,13 @@ class GetIngestionJobs extends BaseHandler {
         super(true);
     }
 
-    getIngestionDetails() {
+    async getIngestionDetails() {
         const ingestionManager = this.dbManager.getManager(MANAGERS.INGESTION_JOB);
-        return ingestionManager.getIngestionJob();
+        const response = await ingestionManager.getIngestionJob();
+        return response.map(row => {
+            row.s3_key = row.s3_key.replace(UPLOAD_FOLDER, '');
+            return row;
+        })
     }
 
     async process(event, context, callback) {

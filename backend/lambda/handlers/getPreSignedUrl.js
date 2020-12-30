@@ -2,7 +2,7 @@ const { uuid } = require('uuidv4');
 const BaseHandler = require('./_baseHandler');
 const ResponseHandler = require('./_responseHandler');
 const AWS = require('aws-sdk');
-const { INGESTION_BUCKET } = require('../common/constant');
+const { INGESTION_BUCKET, UPLOAD_FOLDER } = require('../common/constant');
 
 
 const s3 = new AWS.S3({
@@ -16,7 +16,7 @@ class GetPreSignedUrl extends BaseHandler {
 
     getPreSignedUrlAndKey() {
         const signedUrlExpireSeconds = 60 * 5;
-        const key = `userCsv/${uuid()}.csv`;
+        const key = `${UPLOAD_FOLDER}${uuid()}.csv`;
         const url = s3.getSignedUrl('putObject', {
             Bucket: INGESTION_BUCKET,
             Key: key,
